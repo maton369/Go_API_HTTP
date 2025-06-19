@@ -33,3 +33,32 @@ func NewRouter() *Router {
 func (r *Router) GET(endpoint string, handler http.Handler) {
 	// TODO: 木に挿入する処理を実装する
 }
+
+func (r *Router) insert(method, endpoint string, handler http.Handler) {
+	currentNode := r.tree
+
+	for i := 0; i < len(endpoint); i++ {
+		target := endpoint[i]
+
+		nextNode := currentNode.nextChild(target)
+		if nextNode == nil {
+			node := newNode(target)
+			currentNode.children = append(currentNode.children, node)
+			currentNode = node
+			continue
+		}
+
+		currentNode = nextNode
+	}
+
+	currentNode.handlers[method] = handler
+}
+
+func (n *Node) nextChild(character byte) *Node {
+	for _, child := range n.children {
+		if child.character == character {
+			return child
+		}
+	}
+	return nil
+}
