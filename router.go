@@ -62,3 +62,24 @@ func (n *Node) nextChild(character byte) *Node {
 	}
 	return nil
 }
+
+func (r *Router) Search(method, endpoint string) http.Handler {
+	currentNode := r.tree
+	lcpIndex := 0
+	for {
+		nextNode := currentNode.nextChild(endpoint[lcpIndex])
+		if nextNode == nil {
+			return nil
+		}
+
+		// 各ノードの文字数は1文字と限定されているため、
+		// lcpIndexをインクリメントするだけで良い
+		lcpIndex++
+		currentNode = nextNode
+		if lcpIndex == len(endpoint) {
+			break
+		}
+	}
+
+	return currentNode.handlers[method]
+}
