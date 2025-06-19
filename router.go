@@ -29,3 +29,7 @@ func NewRouter() *Router {
 		},
 	}
 }
+
+func (r *Router) GET(endpoint string, handler http.Handler) {
+	// TODO: 木に挿入する処理を実装する
+}
